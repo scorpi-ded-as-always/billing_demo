@@ -6,10 +6,17 @@ import os
 import json
 import random
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
+DB_PATH = os.path.join(INSTANCE_DIR, "inventory.db")
+
+os.makedirs(INSTANCE_DIR, exist_ok=True)
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here-change-in-production'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventory.db'
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "dev-secret-key")
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_PATH}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 # Default admin credentials
 DEFAULT_ADMIN_USERNAME = 'ADMIN'
