@@ -1,1 +1,1 @@
-from app import app
+from inventory_system.app import app
