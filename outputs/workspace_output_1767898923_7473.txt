@@ -1,0 +1,3 @@
+Current products in database:
+ID: 1, Name: book, SKU: 1, Category: Books
+ID: 2, Name: a, SKU: 123, Category: Electronics

@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class='row'>
+    <div class='col-12'>
+        <h1 class='mb-4 text-white fw-bold'>
+            <i class='bi bi-bar-chart-fill text-warning'></i> Analytics Dashboard
+        </h1>
+    </div>
+</div>
+
+<div class='row mb-4'>
+    <div class='col-md-6'>
+        <div class='card border-0 shadow-lg mb-4' style='background: rgba(255, 255, 255, 0.95);'>
+            <div class='card-header bg-transparent d-flex justify-content-between align-items-center'>
+                <h5 class='card-title mb-0 fw-bold'>
+                    <i class='bi bi-graph-up text-primary'></i> Sales Trend (Last 30 Days)
+                </h5>
+                <button class='btn btn-sm btn-success' onclick='downloadSalesChart()'>
+                    <i class='bi bi-download'></i> Download
+                </button>
+            </div>
+            <div class='card-body'>
+                <canvas id='salesChart'></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class='col-md-6'>
+        <div class='card border-0 shadow-lg mb-4' style='background: rgba(255, 255, 255, 0.95);'>
+            <div class='card-header bg-transparent d-flex justify-content-between align-items-center'>
+                <h5 class='card-title mb-0 fw-bold'>
+                    <i class='bi bi-trophy-fill text-warning'></i> Top 10 Products by Sales
+                </h5>
+                <button class='btn btn-sm btn-success' onclick='downloadTopProductsChart()'>
+                    <i class='bi bi-download'></i> Download
+                </button>
+            </div>
+            <div class='card-body'>
+                <canvas id='topProductsChart'></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-12'>
+        <div class='card border-0 shadow-lg mb-4' style='background: rgba(255, 255, 255, 0.95);'>
+            <div class='card-header bg-transparent'>
+                <h5 class='card-title mb-0 fw-bold'>
+                    <i class='bi bi-fire-fill text-danger'></i> Products in High Demand
+                </h5>
+            </div>
+            <div class='card-body'>
+                <div class='table-responsive'>
+                    <table class='table table-striped table-hover'>
+                        <thead class='bg-primary text-white'>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Current Stock</th>
+                                <th>Units Sold This Month</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in demand_products %}
+                            <tr>
+                                <td>
+                                    <strong>{{ product.name }}</strong>
+                                </td>
+                                <td>
+                                    <span class='badge {% if product.stock <= 10 %}bg-danger{% elif product.stock <= 20 %}bg-warning{% else %}bg-success{% endif %}'>
+                                        {{ product.stock }} units
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class='badge bg-info'>{{ product.total_sold }} units</span>
+                                </td>
+                                <td>
+                                    {% if product.stock <= 10 %}
+                                        <span class='badge bg-danger'>Critical</span>
+                                    {% elif product.stock <= 20 %}
+                                        <span class='badge bg-warning'>Low Stock</span>
+                                    {% else %}
+                                        <span class='badge bg-success'>In Stock</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan='4' class='text-center'>
+                                    <p class='text-muted mb-0'>No sales data available yet</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let salesChartInstance = null;
+let topProductsChartInstance = null;
+
+// Sales Trend Chart
+const salesCtx = document.getElementById('salesChart').getContext('2d');
+salesChartInstance = new Chart(salesCtx, {
+    type: 'line',
+    data: {
+        labels: {{ dates | tojson }},
+        datasets: [{
+            label: 'Sales Amount (₹)',
+            data: {{ amounts | tojson }},
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#667eea',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                labels: {
+                    font: {
+                        family: 'Poppins',
+                        size: 14
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return '₹' + value.toFixed(2);
+                    },
+                    font: {
+                        family: 'Poppins'
+                    }
+                },
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                }
+            },
+            x: {
+                ticks: {
+                    font: {
+                        family: 'Poppins'
+                    }
+                },
+                grid: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+
+// Top Products Chart
+const productsCtx = document.getElementById('topProductsChart').getContext('2d');
+topProductsChartInstance = new Chart(productsCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ product_names | tojson }},
+        datasets: [{
+            label: 'Units Sold',
+            data: {{ quantities | tojson }},
+            backgroundColor: [
+                'rgba(102, 126, 234, 0.8)',
+                'rgba(240, 147, 251, 0.8)',
+                'rgba(79, 172, 254, 0.8)',
+                'rgba(250, 112, 154, 0.8)',
+                'rgba(254, 225, 64, 0.8)',
+                'rgba(102, 126, 234, 0.8)',
+                'rgba(240, 147, 251, 0.8)',
+                'rgba(79, 172, 254, 0.8)',
+                'rgba(250, 112, 154, 0.8)',
+                'rgba(254, 225, 64, 0.8)'
+            ],
+            borderColor: [
+                '#667eea',
+                '#f093fb',
+                '#4facfe',
+                '#fa709a',
+                '#fee140',
+                '#667eea',
+                '#f093fb',
+                '#4facfe',
+                '#fa709a',
+                '#fee140'
+            ],
+            borderWidth: 2,
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1,
+                    font: {
+                        family: 'Poppins'
+                    }
+                },
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                }
+            },
+            x: {
+                ticks: {
+                    maxRotation: 45,
+                    minRotation: 45,
+                    font: {
+                        family: 'Poppins',
+                        size: 11
+                    }
+                },
+                grid: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+
+// Download functions
+function downloadSalesChart() {
+    const link = document.createElement('a');
+    link.download = 'sales-trend-chart.png';
+    link.href = salesChartInstance.toBase64Image();
+    link.click();
+}
+
+function downloadTopProductsChart() {
+    const link = document.createElement('a');
+    link.download = 'top-products-chart.png';
+    link.href = topProductsChartInstance.toBase64Image();
+    link.click();
+}
+</script>
+{% endblock %}
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>

@@ -1,0 +1,31 @@
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.16.125.8:5000
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [08/Jan/2026 18:34:57] "GET /?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:34:58] "GET /?_gl=1*je5acc*_gcl_au*MTMyMDkzNTUyMC4xNzY3ODk2NDkx*_ga*MjEzMjIxOTA0Ni4xNzY3ODk2NDkx*_ga_8NW18Q4WF2*czE3Njc4OTY0OTAkbzEkZzEkdDE3Njc4OTY2NzIkajYwJGwwJGgxMDI4NjMxMzYw&password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:34:59] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:35:00] "[33mGET /favicon.ico?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1[0m" 404 -
+172.16.0.1 - - [08/Jan/2026 18:35:14] "GET /products/add?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:35:15] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:35:41] "[32mPOST /products/add?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1[0m" 302 -
+172.16.0.1 - - [08/Jan/2026 18:35:42] "GET /products?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:35:43] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:35:48] "GET /?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:35:50] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:35:54] "GET /billing?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:35:55] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+/workspace/inventory_system/app.py:180: LegacyAPIWarning: The Query.get() method is considered legacy as of the 1.x series of SQLAlchemy and becomes a legacy construct in 2.0. The method is now available as Session.get() (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+  product = Product.query.get(int(item_id))
+172.16.0.1 - - [08/Jan/2026 18:36:11] "[32mPOST /billing?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1[0m" 302 -
+172.16.0.1 - - [08/Jan/2026 18:36:12] "GET /billing?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:36:13] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:36:22] "GET /dashboard?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:36:23] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:36:27] "GET /sales?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:36:28] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:40:40] "GET /?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:40:41] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -

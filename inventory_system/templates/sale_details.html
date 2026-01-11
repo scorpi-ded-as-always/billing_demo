@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class='row'>
+    <div class='col-12'>
+        <div class='d-flex justify-content-between align-items-center mb-4'>
+            <h1><i class='bi bi-receipt'></i> Invoice Details</h1>
+            <a href='{{ url_for('sales') }}' class='btn btn-secondary'>
+                <i class='bi bi-arrow-left'></i> Back to Sales
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-md-8'>
+        <div class='card mb-4'>
+            <div class='card-header bg-primary text-white'>
+                <div class='d-flex justify-content-between align-items-center'>
+                    <h5 class='card-title mb-0'>{{ sale.invoice_number }}</h5>
+                    <span class='badge bg-light text-dark'>{{ sale.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+            </div>
+            <div class='card-body'>
+                <div class='row mb-4'>
+                    <div class='col-md-6'>
+                        <strong>Customer:</strong> {{ sale.customer_name or 'Walk-in Customer' }}
+                    </div>
+                    <div class='col-md-6 text-md-end'>
+                        <strong>Payment Method:</strong> 
+                        <span class='badge bg-secondary'>{{ sale.payment_method|capitalize }}</span>
+                        {% if sale.upi_id %}
+                        <br><small class='text-muted'>UPI ID: {{ sale.upi_id }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <table class='table table-bordered'>
+                    <thead class='table-light'>
+                        <tr>
+                            <th>Product</th>
+                            <th class='text-center'>Quantity</th>
+                            <th class='text-end'>Unit Price</th>
+                            <th class='text-end'>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in sale.items %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td class='text-center'>{{ item.quantity }}</td>
+                            <td class='text-end'>₹{{ "%.2f"|format(item.unit_price) }}</td>
+                            <td class='text-end'>₹{{ "%.2f"|format(item.subtotal) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan='3' class='text-end'><strong>Subtotal:</strong></td>
+                            <td class='text-end'>₹{{ "%.2f"|format(sale.total_amount / 1.18) }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan='3' class='text-end'><strong>GST (18%):</strong></td>
+                            <td class='text-end'>₹{{ "%.2f"|format(sale.total_amount - (sale.total_amount / 1.18)) }}</td>
+                        </tr>
+                        <tr class='table-primary'>
+                            <td colspan='3' class='text-end'><strong>Total (with GST):</strong></td>
+                            <td class='text-end'><strong>₹{{ "%.2f"|format(sale.total_amount * 1.18) }}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class='col-md-4'>
+        <div class='card mb-4'>
+            <div class='card-header'>
+                <h5 class='card-title mb-0'>Quick Actions</h5>
+            </div>
+            <div class='card-body'>
+                <div class='d-grid gap-2'>
+                    <button class='btn btn-primary' onclick='window.print()'>
+                        <i class='bi bi-printer'></i> Print Invoice
+                    </button>
+                    <a href='{{ url_for('billing') }}' class='btn btn-success'>
+                        <i class='bi bi-plus-circle'></i> New Sale
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class='card'>
+            <div class='card-header'>
+                <h5 class='card-title mb-0'>Summary</h5>
+            </div>
+            <div class='card-body'>
+                <ul class='list-group list-group-flush'>
+                    <li class='list-group-item d-flex justify-content-between'>
+                        <span>Total Items:</span>
+                        <strong>{{ sale.items|length }}</strong>
+                    </li>
+                    <li class='list-group-item d-flex justify-content-between'>
+                        <span>Total Units:</span>
+                        <strong>{{ sale.items|sum(attribute='quantity') }}</strong>
+                    </li>
+                    <li class='list-group-item d-flex justify-content-between'>
+                        <span>Subtotal:</span>
+                        <strong>₹{{ "%.2f"|format(sale.total_amount / 1.18) }}</strong>
+                    </li>
+                    <li class='list-group-item d-flex justify-content-between'>
+                        <span>GST (18%):</span>
+                        <strong>₹{{ "%.2f"|format(sale.total_amount - (sale.total_amount / 1.18)) }}</strong>
+                    </li>
+                    <li class='list-group-item d-flex justify-content-between bg-light'>
+                        <span><strong>Grand Total:</strong></span>
+                        <strong class='text-primary'>₹{{ "%.2f"|format(sale.total_amount * 1.18) }}</strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>

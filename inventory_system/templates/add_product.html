@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class='row'>
+    <div class='col-12'>
+        <div class='d-flex justify-content-between align-items-center mb-4'>
+            <h1 class='text-white fw-bold'>
+                <i class='bi bi-plus-circle-fill text-warning'></i> Add New Product
+            </h1>
+            <a href='{{ url_for('products') }}' class='btn btn-secondary fw-bold' style='background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.3);'>
+                <i class='bi bi-arrow-left-circle-fill'></i> Back to Products
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-md-8'>
+        <div class='card border-0 shadow-lg' style='background: rgba(255, 255, 255, 0.95);'>
+            <div class='card-header bg-transparent'>
+                <h5 class='card-title mb-0 fw-bold'>
+                    <i class='bi bi-box-seam-fill text-primary'></i> Product Information
+                </h5>
+            </div>
+            <div class='card-body'>
+                <form method='POST'>
+                    <div class='row'>
+                        <div class='col-md-6'>
+                            <div class='mb-3'>
+                                <label for='name' class='form-label fw-bold'>Product Name *</label>
+                                <input type='text' class='form-control' id='name' name='name' required placeholder='Enter product name'>
+                            </div>
+                        </div>
+                        <div class='col-md-6'>
+                            <div class='mb-3'>
+                                <label for='sku' class='form-label fw-bold'>SKU / Barcode *</label>
+                                <input type='text' class='form-control' id='sku' name='sku' required placeholder='Enter unique SKU or barcode'>
+                                <small class='text-muted'>Unique identifier for barcode scanning</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class='mb-3'>
+                        <label for='category' class='form-label fw-bold'>Category *</label>
+                        <select class='form-select' id='category' name='category' required>
+                            <option value=''>Select Category</option>
+                            <option value='Electronics'>📱 Electronics</option>
+                            <option value='Clothing'>👕 Clothing</option>
+                            <option value='Food & Beverages'>🍔 Food & Beverages</option>
+                            <option value='Home & Garden'>🏠 Home & Garden</option>
+                            <option value='Sports'>⚽ Sports</option>
+                            <option value='Books'>📚 Books</option>
+                            <option value='Other'>📦 Other</option>
+                        </select>
+                    </div>
+
+                    <div class='mb-3'>
+                        <label for='description' class='form-label fw-bold'>Description</label>
+                        <textarea class='form-control' id='description' name='description' rows='3' placeholder='Product description...'></textarea>
+                    </div>
+
+                    <div class='row'>
+                        <div class='col-md-4'>
+                            <div class='mb-3'>
+                                <label for='price' class='form-label fw-bold'>Price (₹) *</label>
+                                <input type='number' class='form-control' id='price' name='price' step='0.01' min='0' required placeholder='0.00'>
+                            </div>
+                        </div>
+                        <div class='col-md-4'>
+                            <div class='mb-3'>
+                                <label for='stock' class='form-label fw-bold'>Initial Stock *</label>
+                                <input type='number' class='form-control' id='stock' name='stock' min='0' required placeholder='0'>
+                            </div>
+                        </div>
+                        <div class='col-md-4'>
+                            <div class='mb-3'>
+                                <label for='min_stock' class='form-label fw-bold'>Minimum Stock Alert</label>
+                                <input type='number' class='form-control' id='min_stock' name='min_stock' value='10' min='0' placeholder='10'>
+                                <small class='text-muted'>Alert when stock falls below this</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class='d-flex gap-2'>
+                        <button type='submit' class='btn btn-primary btn-lg fw-bold' style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;'>
+                            <i class='bi bi-check-circle-fill'></i> Add Product
+                        </button>
+                        <a href='{{ url_for('products') }}' class='btn btn-secondary btn-lg fw-bold'>
+                            <i class='bi bi-x-circle-fill'></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class='col-md-4'>
+        <div class='card border-0 shadow-lg mb-4' style='background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);'>
+            <div class='card-body'>
+                <h5 class='card-title fw-bold mb-4'>
+                    <i class='bi bi-lightbulb-fill text-warning'></i> Tips
+                </h5>
+                <ul class='mb-0'>
+                    <li class='mb-2'>📱 SKU should be unique for each product</li>
+                    <li class='mb-2'>🔔 Set minimum stock to get low stock alerts</li>
+                    <li class='mb-2'>💰 Price should be in decimal format (e.g., 19.99)</li>
+                    <li class='mb-2'>🔄 Initial stock can be updated later</li>
+                    <li class='mb-2'>📊 Use product barcodes for easy scanning</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class='card border-0 shadow-lg' style='background: linear-gradient(135deg, #f093fb20 0%, #f5576c20 100%);'>
+            <div class='card-body'>
+                <h5 class='card-title fw-bold mb-4'>
+                    <i class='bi bi-info-circle-fill text-primary'></i> Barcode Info
+                </h5>
+                <p class='mb-2'>Use actual product barcodes as SKU for seamless scanning at checkout!</p>
+                <p class='text-muted small mb-0'>Compatible with most barcode scanners - just scan and the product will be automatically added to the bill.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>

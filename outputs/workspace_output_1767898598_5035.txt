@@ -1,0 +1,309 @@
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.16.125.8:5000
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [08/Jan/2026 18:58:28] "GET /?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:58:29] "GET /?_gl=1*18oo9tq*_gcl_au*MTMyMDkzNTUyMC4xNzY3ODk2NDkx*_ga*MjEzMjIxOTA0Ni4xNzY3ODk2NDkx*_ga_8NW18Q4WF2*czE3Njc4OTY0OTAkbzEkZzEkdDE3Njc4OTY2NzIkajYwJGwwJGgxMDI4NjMxMzYw&password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:58:30] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:58:30] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:58:41] "GET /billing?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:58:42] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:58:42] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:58:43] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+/workspace/inventory_system/app.py:254: LegacyAPIWarning: The Query.get() method is considered legacy as of the 1.x series of SQLAlchemy and becomes a legacy construct in 2.0. The method is now available as Session.get() (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+  product = Product.query.get(int(sku_or_id))
+172.16.0.1 - - [08/Jan/2026 18:59:02] "[33mGET /api/product/11?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1[0m" 404 -
+172.16.0.1 - - [08/Jan/2026 18:59:12] "[33mGET /api/product/2?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1[0m" 404 -
+172.16.0.1 - - [08/Jan/2026 18:59:19] "GET /?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:59:20] "GET /?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:59:21] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:59:21] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:59:33] "GET /products/add?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:59:34] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:59:34] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 18:59:57] "[32mPOST /products/add?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1[0m" 302 -
+172.16.0.1 - - [08/Jan/2026 18:59:58] "GET /products?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+[2026-01-08 18:59:59,026] ERROR in app: Exception on /products/add [POST]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: product.sku
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/inventory_system/app.py", line 140, in add_product
+    db.session.commit()
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/scoping.py", line 597, in commit
+    return self._proxied.commit()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2030, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 1311, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 1286, in _prepare_impl
+    self.session.flush()
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4331, in flush
+    self._flush(objects)
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4466, in _flush
+    with util.safe_reraise():
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4427, in _flush
+    flush_context.execute()
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: product.sku
+[SQL: INSERT INTO product (name, sku, category, description, price, stock, min_stock, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('a', '123', 'Electronics', '', 100.0, 20, 10, '2026-01-08 18:59:59.026241')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+172.16.0.1 - - [08/Jan/2026 18:59:59] "[35m[1mPOST /products/add?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1[0m" 500 -
+[2026-01-08 19:00:07,437] ERROR in app: Exception on /products/add [POST]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: product.sku
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/inventory_system/app.py", line 140, in add_product
+    db.session.commit()
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/scoping.py", line 597, in commit
+    return self._proxied.commit()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2030, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 1311, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 1286, in _prepare_impl
+    self.session.flush()
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4331, in flush
+    self._flush(objects)
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4466, in _flush
+    with util.safe_reraise():
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4427, in _flush
+    flush_context.execute()
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: product.sku
+[SQL: INSERT INTO product (name, sku, category, description, price, stock, min_stock, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('a', '123', 'Electronics', '', 100.0, 20, 10, '2026-01-08 19:00:07.437581')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+172.16.0.1 - - [08/Jan/2026 19:00:07] "[35m[1mPOST /products/add?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1[0m" 500 -
+172.16.0.1 - - [08/Jan/2026 19:00:13] "GET /?_gl=1*1aq7ba3*_gcl_au*MTMyMDkzNTUyMC4xNzY3ODk2NDkx*_ga*MjEzMjIxOTA0Ni4xNzY3ODk2NDkx*_ga_8NW18Q4WF2*czE3Njc4OTY0OTAkbzEkZzEkdDE3Njc4OTY2NzIkajYwJGwwJGgxMDI4NjMxMzYw&password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:00:14] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:00:14] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:00:19] "GET /products/add?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:00:20] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:00:20] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+[2026-01-08 19:00:44,817] ERROR in app: Exception on /products/add [POST]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: product.sku
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/inventory_system/app.py", line 140, in add_product
+    db.session.commit()
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/scoping.py", line 597, in commit
+    return self._proxied.commit()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2030, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 1311, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 1286, in _prepare_impl
+    self.session.flush()
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4331, in flush
+    self._flush(objects)
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4466, in _flush
+    with util.safe_reraise():
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 4427, in _flush
+    flush_context.execute()
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: product.sku
+[SQL: INSERT INTO product (name, sku, category, description, price, stock, min_stock, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('sad', '123', 'Books', '', 100.0, 12, 10, '2026-01-08 19:00:44.817222')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+172.16.0.1 - - [08/Jan/2026 19:00:44] "[35m[1mPOST /products/add?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1[0m" 500 -
+172.16.0.1 - - [08/Jan/2026 19:02:32] "GET /?_gl=1*1aq7ba3*_gcl_au*MTMyMDkzNTUyMC4xNzY3ODk2NDkx*_ga*MjEzMjIxOTA0Ni4xNzY3ODk2NDkx*_ga_8NW18Q4WF2*czE3Njc4OTY0OTAkbzEkZzEkdDE3Njc4OTY2NzIkajYwJGwwJGgxMDI4NjMxMzYw&password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:02:33] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:02:33] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:02:36] "GET /products/add?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:02:36] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:02:37] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:00] "[32mPOST /products/add?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1[0m" 302 -
+172.16.0.1 - - [08/Jan/2026 19:03:00] "GET /products?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:01] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:01] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:06] "GET /?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:07] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:07] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:11] "GET /billing?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:11] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:11] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:20] "GET /api/product/9434?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+/workspace/inventory_system/app.py:195: LegacyAPIWarning: The Query.get() method is considered legacy as of the 1.x series of SQLAlchemy and becomes a legacy construct in 2.0. The method is now available as Session.get() (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+  product = Product.query.get(int(item_id))
+172.16.0.1 - - [08/Jan/2026 19:03:53] "[32mPOST /billing?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1[0m" 302 -
+172.16.0.1 - - [08/Jan/2026 19:03:54] "GET /billing?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:55] "GET /static/css/style.css?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -
+172.16.0.1 - - [08/Jan/2026 19:03:55] "GET /static/images/bolt_logo.jpg?password=38882932-2457-46c0-8d50-4b7fd2352545 HTTP/1.1" 200 -

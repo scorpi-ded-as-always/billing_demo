@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/workspace/inventory_system/app.py", line 1, in <module>
+    from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+ModuleNotFoundError: No module named 'flask'

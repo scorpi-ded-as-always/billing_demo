@@ -1,0 +1,544 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class='mb-4 text-white fw-bold'>
+            <i class='bi bi-receipt-cutoff text-warning'></i> Billing / Point of Sale
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class='card border-0 shadow-lg mb-4' style='background: rgba(255, 255, 255, 0.95);'>
+            <div class='card-header bg-transparent'>
+                <div class='d-flex justify-content-between align-items-center'>
+                    <h5 class='card-title mb-0 fw-bold'>
+                        <i class='bi bi-upc-scan text-primary'></i> Add Products to Bill
+                    </h5>
+                    <span class='badge bg-info'>Barcode Scanner Ready</span>
+                </div>
+            </div>
+            <div class='card-body'>
+                <!-- AI Suggestions Section -->
+                <div class='mb-4 p-3 rounded' style='background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);'>
+                    <h6 class='fw-bold mb-3'>
+                        <i class='bi bi-magic text-primary'></i> AI-Powered Suggestions
+                    </h6>
+                    <div class='row' id='aiSuggestions'>
+                        <div class='col-12 text-center'>
+                            <div class='spinner-border text-primary' role='status'>
+                                <span class='visually-hidden'>Loading...</span>
+                            </div>
+                            <small class='text-muted'>Loading AI suggestions...</small>
+                        </div>
+                    </div>
+                </div>
+
+                <form method='POST' id='billingForm'>
+                    <div class='row mb-3'>
+                        <div class='col-md-6'>
+                            <label for='customer_name' class='form-label fw-bold'>Customer Name</label>
+                            <input type='text' class='form-control' id='customer_name' name='customer_name' placeholder='Enter customer name (optional)'>
+                        </div>
+                        <div class='col-md-6'>
+                            <label for='payment_method' class='form-label fw-bold'>Payment Method</label>
+                            <select class='form-select' id='payment_method' name='payment_method' onchange='toggleUPIField()'>
+                                <option value='cash'>💵 Cash</option>
+                                <option value='card'>💳 Card</option>
+                                <option value='upi'>📱 UPI</option>
+                                <option value='transfer'>🏦 Bank Transfer</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- UPI ID Field -->
+                    <div class='mb-3' id='upiField' style='display: none;'>
+                        <label for='upi_id' class='form-label fw-bold'>
+                            <i class='bi bi-qr-code-scan text-success'></i> UPI ID
+                        </label>
+                        <input type='text' class='form-control' id='upi_id' name='upi_id' placeholder='example@upi'>
+                        <small class='text-muted'>Enter customer's UPI ID for payment</small>
+                    </div>
+
+                    <!-- Barcode Scanner Input -->
+                    <div class='mb-3'>
+                        <label class='form-label fw-bold'>
+                            <i class='bi bi-upc-scan'></i> Scan Barcode or Enter Product SKU
+                        </label>
+                        <div class='input-group'>
+                            <input type='text' class='form-control' id='barcodeInput' placeholder='Scan barcode or type SKU/ID...' autofocus autocomplete='off'>
+                            <button type='button' class='btn btn-primary' onclick='lookupProduct()'>
+                                <i class='bi bi-search'></i> Search
+                            </button>
+                        </div>
+                        <small class='text-muted'>Use a barcode scanner or type the product SKU/ID manually</small>
+                    </div>
+
+                    <div class='mb-3' id='productSelector' style='display: none;'>
+                        <label class='form-label fw-bold'>Selected Product</label>
+                        <div class='card bg-light'>
+                            <div class='card-body'>
+                                <div class='row align-items-center'>
+                                    <div class='col-md-6'>
+                                        <p class='mb-1'><strong>Product:</strong> <span id='selectedProductName'>-</span></p>
+                                        <p class='mb-1'><strong>SKU:</strong> <span id='selectedProductSku'>-</span></p>
+                                        <p class='mb-1'><strong>Price:</strong> ₹<span id='selectedProductPrice'>0.00</span></p>
+                                        <p class='mb-0'><strong>Available Stock:</strong> <span id='selectedProductStock'>0</span></p>
+                                    </div>
+                                    <div class='col-md-3'>
+                                        <label for='quantity' class='form-label fw-bold'>Quantity</label>
+                                        <input type='number' class='form-control' id='quantity' value='1' min='1'>
+                                    </div>
+                                    <div class='col-md-3 d-flex align-items-end'>
+                                        <button type='button' class='btn btn-success w-100' onclick='addItem()'>
+                                            <i class='bi bi-plus-circle-fill'></i> Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Manual Product Selection (Fallback) -->
+                    <div class='mb-3'>
+                        <label class='form-label fw-bold'>Or Select Product Manually</label>
+                        <select class='form-select' id='productSelect' onchange='onProductSelect()'>
+                            <option value=''>Choose a product...</option>
+                            {% for product in products %}
+                            <option value='{{ product.id }}' 
+                                    data-price='{{ product.price }}' 
+                                    data-stock='{{ product.stock }}'
+                                    data-name='{{ product.name }}'>
+                                {{ product.name }} - ₹{{ "%.2f"|format(product.price) }} (Stock: {{ product.stock }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class='col-md-4'>
+        <div class='card border-0 shadow-lg mb-4' style='background: rgba(255, 255, 255, 0.95);'>
+            <div class='card-header bg-primary text-white'>
+                <h5 class='card-title mb-0 fw-bold'>
+                    <i class='bi bi-receipt'></i> Invoice Summary
+                </h5>
+            </div>
+            <div class='card-body'>
+                <div class='table-responsive' style='max-height: 300px; overflow-y: auto;'>
+                    <table class='table table-sm' id='billItems'>
+                        <thead class='table-light'>
+                            <tr>
+                                <th>Item</th>
+                                <th class='text-center'>Qty</th>
+                                <th class='text-end'>Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr>
+
+                <div class='d-flex justify-content-between mb-2'>
+                    <span class='fw-bold'>Subtotal:</span>
+                    <span class='fw-bold' id='subtotal'>₹0.00</span>
+                </div>
+                <div class='d-flex justify-content-between mb-2'>
+                    <span class='fw-bold'>GST (18%):</span>
+                    <span class='fw-bold' id='tax'>₹0.00</span>
+                </div>
+                <div class='d-flex justify-content-between mb-3' style='font-size: 1.3rem;'>
+                    <span class='fw-bold text-primary'>Total:</span>
+                    <span class='fw-bold text-primary' id='total'>₹0.00</span>
+                </div>
+
+                <hr>
+
+                <div class='d-grid gap-2'>
+                    <button type='button' class='btn btn-success btn-lg fw-bold' onclick='submitBill()'>
+                        <i class='bi bi-check-circle-fill'></i> Complete Sale
+                    </button>
+                    <button type='button' class='btn btn-primary fw-bold' onclick='printReceipt()'>
+                        <i class='bi bi-printer-fill'></i> Print Receipt
+                    </button>
+                    <button type='button' class='btn btn-warning fw-bold' onclick='clearBill()'>
+                        <i class='bi bi-x-circle-fill'></i> Clear Bill
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Classic Receipt Print Template (Hidden) -->
+<div id='receiptPrintTemplate' style='display: none;'>
+    <div id='printableReceipt' style='background: white; padding: 20px; max-width: 400px; margin: 0 auto; font-family: "Courier New", monospace; font-size: 14px;'>
+        <div style='text-align: center; margin-bottom: 20px;'>
+            <img src='{{ url_for("static", filename="images/bolt_logo.jpg") }}' alt='BOLT Logo' style='height: 60px; margin-bottom: 10px;'>
+            <h2 style='margin: 0; font-size: 24px; font-weight: bold;'>BOLT BILLINGs</h2>
+            <p style='margin: 5px 0; font-size: 12px;'>Complete Inventory & Billing Solution</p>
+            <p style='margin: 5px 0; font-size: 11px;'>123 Business Street, City - 12345</p>
+            <p style='margin: 5px 0; font-size: 11px;'>Phone: +91 98765 43210</p>
+        </div>
+        
+        <div style='margin-bottom: 15px;'>
+            <p style='margin: 5px 0;'><strong>Invoice #:</strong> <span id='printInvoiceNumber'>-</span></p>
+            <p style='margin: 5px 0;'><strong>Date:</strong> <span id='printInvoiceDate'>-</span></p>
+            <p style='margin: 5px 0;'><strong>Customer:</strong> <span id='printCustomerName'>Walk-in Customer</span></p>
+            <p style='margin: 5px 0;'><strong>Payment:</strong> <span id='printPaymentMethod'>-</span></p>
+            {% if sale.upi_id %}
+            <p style='margin: 5px 0;'><strong>UPI ID:</strong> <span id='printUPIId'>-</span></p>
+            {% endif %}
+        </div>
+
+        <div style='border-bottom: 1px dashed #000; margin: 10px 0;'></div>
+
+        <table style='width: 100%; margin-bottom: 10px;'>
+            <tbody id='printBillItems'>
+            </tbody>
+        </table>
+
+        <div style='border-bottom: 1px dashed #000; margin: 10px 0;'></div>
+
+        <div style='text-align: left;'>
+            <p style='margin: 5px 0;'><strong>Sub Total:</strong> <span id='printSubtotal' style='float: right;'>₹0.00</span></p>
+            <p style='margin: 5px 0;'><strong>GST (18%):</strong> <span id='printTax' style='float: right;'>₹0.00</span></p>
+            <div style='border-bottom: 1px dashed #000; margin: 10px 0;'></div>
+            <p style='margin: 10px 0; font-size: 18px; font-weight: bold;'>TOTAL (INR): <span id='printTotal' style='float: right;'>₹0.00</span></p>
+        </div>
+
+        <div style='border-bottom: 1px dashed #000; margin: 15px 0;'></div>
+
+        <div style='text-align: center; margin-top: 20px; font-size: 12px;'>
+            <p style='margin: 5px 0;'>Transaction ID: <span id='printTransactionId'>-</span></p>
+            <p style='margin: 5px 0;'>Thank You For Your Purchase!</p>
+            <p style='margin: 5px 0;'>Visit Us Again!</p>
+            <div style='border-bottom: 1px dashed #000; margin: 10px 0;'></div>
+            <p style='margin: 5px 0; font-size: 10px;'>BOLT BILLINGs © 2024</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let billItems = [];
+let scannedProduct = null;
+const GST_RATE = 0.18; // 18% GST
+
+// Load AI suggestions on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadAISuggestions();
+});
+
+function loadAISuggestions() {
+    fetch('/api/ai-suggestions')
+        .then(response => response.json())
+        .then(data => {
+            displayAISuggestions(data);
+        })
+        .catch(error => {
+            console.error('Error loading AI suggestions:', error);
+        });
+}
+
+function displayAISuggestions(suggestions) {
+    const container = document.getElementById('aiSuggestions');
+    let html = '';
+    
+    // Top Selling Products
+    if (suggestions.top_selling && suggestions.top_selling.length > 0) {
+        html += '<div class="col-md-4 mb-2"><small class="text-muted fw-bold">🏆 Top Selling</small>';
+        suggestions.top_selling.forEach(product => {
+            html += `<div class="d-grid"><button type="button" class="btn btn-sm btn-outline-primary mt-1" onclick="quickAddProduct(${product.id})">${product.name} - ₹${product.price.toFixed(2)}</button></div>`;
+        });
+        html += '</div>';
+    }
+    
+    // Products in Demand
+    if (suggestions.in_demand && suggestions.in_demand.length > 0) {
+        html += '<div class="col-md-4 mb-2"><small class="text-muted fw-bold">🔥 In Demand</small>';
+        suggestions.in_demand.forEach(product => {
+            html += `<div class="d-grid"><button type="button" class="btn btn-sm btn-outline-warning mt-1" onclick="quickAddProduct(${product.id})">${product.name} - ₹${product.price.toFixed(2)}</button></div>`;
+        });
+        html += '</div>';
+    }
+    
+    // Recent Products
+    if (suggestions.recent && suggestions.recent.length > 0) {
+        html += '<div class="col-md-4 mb-2"><small class="text-muted fw-bold">🆕 Recent</small>';
+        suggestions.recent.forEach(product => {
+            html += `<div class="d-grid"><button type="button" class="btn btn-sm btn-outline-info mt-1" onclick="quickAddProduct(${product.id})">${product.name} - ₹${product.price.toFixed(2)}</button></div>`;
+        });
+        html += '</div>';
+    }
+    
+    container.innerHTML = html;
+}
+
+function quickAddProduct(productId) {
+    fetch(`/api/product/${productId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                scannedProduct = data.product;
+                showProductSelector(scannedProduct);
+                document.getElementById('barcodeInput').focus();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+// Toggle UPI field
+function toggleUPIField() {
+    const paymentMethod = document.getElementById('payment_method').value;
+    const upiField = document.getElementById('upiField');
+    
+    if (paymentMethod === 'upi') {
+        upiField.style.display = 'block';
+        document.getElementById('upi_id').focus();
+    } else {
+        upiField.style.display = 'none';
+    }
+}
+
+// Barcode scanner input handler
+document.getElementById('barcodeInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        lookupProduct();
+    }
+});
+
+function lookupProduct() {
+    const barcode = document.getElementById('barcodeInput').value.trim();
+    if (!barcode) return;
+    
+    fetch(`/api/product/${barcode}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                scannedProduct = data.product;
+                showProductSelector(scannedProduct);
+                document.getElementById('barcodeInput').value = '';
+            } else {
+                alert('Product not found! Please check the barcode/SKU.');
+                document.getElementById('barcodeInput').value = '';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error looking up product. Please try again.');
+        });
+}
+
+function showProductSelector(product) {
+    document.getElementById('productSelector').style.display = 'block';
+    document.getElementById('selectedProductName').textContent = product.name;
+    document.getElementById('selectedProductSku').textContent = product.sku;
+    document.getElementById('selectedProductPrice').textContent = product.price.toFixed(2);
+    document.getElementById('selectedProductStock').textContent = product.stock;
+    document.getElementById('quantity').max = product.stock;
+    document.getElementById('quantity').value = 1;
+    document.getElementById('quantity').focus();
+}
+
+function onProductSelect() {
+    const select = document.getElementById('productSelect');
+    if (select.value) {
+        const option = select.options[select.selectedIndex];
+        showProductSelector({
+            id: parseInt(select.value),
+            name: option.dataset.name,
+            sku: 'MAN-' + select.value,
+            price: parseFloat(option.dataset.price),
+            stock: parseInt(option.dataset.stock)
+        });
+        select.value = '';
+    }
+}
+
+function addItem() {
+    if (!scannedProduct) {
+        alert('Please select or scan a product first');
+        return;
+    }
+    
+    const quantity = parseInt(document.getElementById('quantity').value);
+    
+    if (quantity > scannedProduct.stock) {
+        alert('Not enough stock available. Available: ' + scannedProduct.stock);
+        return;
+    }
+    
+    // Check if item already exists
+    const existingItem = billItems.find(item => item.id === scannedProduct.id);
+    if (existingItem) {
+        if (existingItem.quantity + quantity > scannedProduct.stock) {
+            alert('Total quantity exceeds available stock');
+            return;
+        }
+        existingItem.quantity += quantity;
+    } else {
+        billItems.push({
+            id: scannedProduct.id,
+            name: scannedProduct.name,
+            quantity: quantity,
+            price: scannedProduct.price
+        });
+    }
+    
+    updateBillDisplay();
+    document.getElementById('productSelector').style.display = 'none';
+    scannedProduct = null;
+    document.getElementById('barcodeInput').focus();
+}
+
+function removeItem(index) {
+    billItems.splice(index, 1);
+    updateBillDisplay();
+}
+
+function updateBillDisplay() {
+    const tbody = document.querySelector('#billItems tbody');
+    tbody.innerHTML = '';
+    
+    let subtotal = 0;
+    
+    billItems.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <strong>${item.name}</strong>
+            </td>
+            <td class='text-center'>${item.quantity}</td>
+            <td class='text-end'>₹${itemTotal.toFixed(2)}</td>
+            <td class='text-end'>
+                <button type='button' class='btn btn-sm btn-danger' onclick='removeItem(${index})'>
+                    <i class='bi bi-trash'></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+    
+    const tax = subtotal * GST_RATE;
+    const total = subtotal + tax;
+    
+    document.getElementById('subtotal').textContent = '₹' + subtotal.toFixed(2);
+    document.getElementById('tax').textContent = '₹' + tax.toFixed(2);
+    document.getElementById('total').textContent = '₹' + total.toFixed(2);
+}
+
+function printReceipt() {
+    if (billItems.length === 0) {
+        alert('Please add items to the bill first');
+        return;
+    }
+    
+    // Update print template
+    const now = new Date();
+    const transactionId = 'TXN-' + now.getTime().toString().slice(-10);
+    document.getElementById('printInvoiceNumber').textContent = 'INV-' + now.getTime().toString().slice(-10);
+    document.getElementById('printInvoiceDate').textContent = now.toLocaleDateString('en-IN') + ' ' + now.toLocaleTimeString('en-IN');
+    document.getElementById('printCustomerName').textContent = document.getElementById('customer_name').value || 'Walk-in Customer';
+    document.getElementById('printPaymentMethod').textContent = document.getElementById('payment_method').value.toUpperCase();
+    
+    const upiId = document.getElementById('upi_id').value;
+    if (upiId) {
+        document.getElementById('printUPIId').textContent = upiId;
+    }
+    
+    document.getElementById('printTransactionId').textContent = transactionId;
+    
+    const printItems = document.getElementById('printBillItems');
+    printItems.innerHTML = '';
+    
+    let subtotal = 0;
+    billItems.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td colspan='3'>${item.name}</td>
+        `;
+        printItems.appendChild(row);
+        
+        const qtyRow = document.createElement('tr');
+        qtyRow.innerHTML = `
+            <td style='width: 60%;'>${item.quantity} x ₹${item.price.toFixed(2)}</td>
+            <td style='width: 40%; text-align: right;'>₹${itemTotal.toFixed(2)}</td>
+        `;
+        printItems.appendChild(qtyRow);
+    });
+    
+    const tax = subtotal * GST_RATE;
+    const total = subtotal + tax;
+    
+    document.getElementById('printSubtotal').textContent = '₹' + subtotal.toFixed(2);
+    document.getElementById('printTax').textContent = '₹' + tax.toFixed(2);
+    document.getElementById('printTotal').textContent = '₹' + total.toFixed(2);
+    
+    // Show print dialog
+    const printTemplate = document.getElementById('receiptPrintTemplate');
+    printTemplate.style.display = 'block';
+    
+    window.print();
+    
+    printTemplate.style.display = 'none';
+}
+
+function clearBill() {
+    if (billItems.length === 0) return;
+    
+    if (confirm('Are you sure you want to clear the entire bill?')) {
+        billItems = [];
+        updateBillDisplay();
+        document.getElementById('customer_name').value = '';
+        document.getElementById('payment_method').value = 'cash';
+        document.getElementById('upi_id').value = '';
+        document.getElementById('upiField').style.display = 'none';
+    }
+}
+
+function submitBill() {
+    if (billItems.length === 0) {
+        alert('Please add items to the bill');
+        return;
+    }
+    
+    const form = document.getElementById('billingForm');
+    
+    // Add hidden inputs for items
+    billItems.forEach(item => {
+        const itemInput = document.createElement('input');
+        itemInput.type = 'hidden';
+        itemInput.name = 'items[]';
+        itemInput.value = item.id;
+        form.appendChild(itemInput);
+        
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'hidden';
+        qtyInput.name = 'quantities[]';
+        qtyInput.value = item.quantity;
+        form.appendChild(qtyInput);
+    });
+    
+    form.submit();
+}
+</script>
+{% endblock %}
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
